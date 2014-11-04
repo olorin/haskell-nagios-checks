@@ -1,0 +1,12 @@
+tags
+codex.tags
+config.h
+dist/
+*.prof
+*.mem
+*.hp
+*.swo
+*.swp
+
+.cabal-sandbox
+cabal.sandbox.config
