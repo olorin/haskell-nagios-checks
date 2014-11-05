@@ -23,11 +23,13 @@ executable check-slab-fragmentation
   build-depends:     base >=3 && <5,
                      bytestring,
                      nagios-check,
+                     mtl,
                      text,
                      parsers,
                      formatting,
                      trifecta,
                      lens,
+                     optparse-applicative,
                      transformers
 
   ghc-options:       -O2

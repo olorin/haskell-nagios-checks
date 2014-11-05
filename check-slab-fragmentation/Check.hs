@@ -21,6 +21,7 @@ module Check
     Extfrag,
     CheckImpl(..),
     PluginOpts(..),
+    Magnitude(..),
     warnMagnitude,
     critMagnitude,
     warnUnusable,
