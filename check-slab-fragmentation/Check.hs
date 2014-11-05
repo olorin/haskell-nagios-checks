@@ -8,6 +8,7 @@
 --
 
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE NoMonomorphismRestriction  #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TemplateHaskell            #-}
 
@@ -170,7 +171,9 @@ plugin impl opts = do
                             Nothing
                             Nothing
 
-    addResult OK "Grandmother, what big SLABS you have!"
+    let path = traversed . magnitudes . traversed . _Just
+    let mean = sumOf path unusable / fromIntegral (lengthOf path unusable)
+    addResult OK (sformat ("Mean fragmentation: " % prec 2 % "%") (mean * 100))
 
 -- | An implementation of a "getter" of 'ExtfragIndex's and 'UnusableIndex's.
 --
