@@ -1,7 +1,7 @@
 cabal-version:       >= 1.10
-name:                check-slab-fragmentation
+name:                check-page-fragmentation
 version:             2.0.2
-synopsis:            Check SLAB fragmentation and emit perfdata
+synopsis:            Check page fragmentation and emit perfdata
 license:             BSD3
 author:              Anchor Engineering <engineering@anchor.com.au>
 maintainer:          Anchor Engineering <engineering@anchor.com.au>
@@ -16,14 +16,14 @@ source-repository    head
   type:              git
   location:          git@github.com:anchor/nagios-checks.git
 
-executable check-slab-fragmentation
+executable check-page-fragmentation
   main-is:           Main.hs
   default-language:  Haskell2010
 
   build-depends:     base >=3 && <5,
                      bytestring,
                      nagios-check,
-                     mtl,
+                     mtl >= 2.2,
                      text,
                      parsers,
                      formatting,
@@ -40,7 +40,7 @@ executable check-slab-fragmentation
 
   ghc-prof-options:  -fprof-auto
 
-test-suite           check-slab-fragmentation-test
+test-suite           check-page-fragmentation-test
   main-is:           Test.hs
   type:              exitcode-stdio-1.0
   default-language:  Haskell2010

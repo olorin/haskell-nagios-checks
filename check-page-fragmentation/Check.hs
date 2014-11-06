@@ -14,7 +14,7 @@
 
 module Check
 (
-    SLABIndex(..),
+    PageIndex(..),
     node,
     zone,
     magnitudes,
@@ -28,7 +28,7 @@ module Check
     warnUnusable,
     critUnusable,
     debugFSImpl,
-    parseSLABIndex,
+    parsePageIndex,
     plugin
 ) where
 
@@ -65,13 +65,13 @@ instance Show Magnitude where
         <> show (2 ^ (12 + n) :: Int)
         <> " KiB)"
 
-data SLABIndex tag = SLABIndex
+data PageIndex tag = PageIndex
     { _node       :: Node
     , _zone       :: Text
     , _magnitudes :: [Maybe Double]
     }
   deriving (Eq, Show)
-makeLenses ''SLABIndex
+makeLenses ''PageIndex
 
 data PluginOpts = PluginOpts
     { _warnMagnitude :: Magnitude
@@ -180,8 +180,8 @@ plugin impl opts = do
 -- Yay, first class modules. This just seems a little more readable and
 -- explicit than a typeclass.
 data CheckImpl = CheckImpl
-    { getUnusableIndices :: IO [SLABIndex Unusable]
-    , getExtfragIndices  :: IO [SLABIndex Extfrag]
+    { getUnusableIndices :: IO [PageIndex Unusable]
+    , getExtfragIndices  :: IO [PageIndex Extfrag]
     }
 
 -- | Grab unusable and extfrag indices from debugfs, specifically probably:
@@ -196,20 +196,20 @@ debugFSImpl unusable_index_path extfrag_index_path =
     CheckImpl (tryParse unusable_index_path)
               (tryParse extfrag_index_path)
   where
-    tryParse :: FilePath -> IO [SLABIndex a]
+    tryParse :: FilePath -> IO [PageIndex a]
     tryParse path = do
         -- File must be read as lazy bytestring due to stat returning length of
         -- 0 on debugfs files.
-        r <- parseByteString (some parseSLABIndex) mempty . L.toStrict <$> L.readFile path
+        r <- parseByteString (some parsePageIndex) mempty . L.toStrict <$> L.readFile path
         case r of
             Failure e -> error $ "Failed parsing: " ++ show e
             Success v -> return v
 
--- | Parse one SLABIndex line, works for both extfrag and unusable_index lines
-parseSLABIndex :: Parser (SLABIndex a)
-parseSLABIndex =
+-- | Parse one PageIndex line, works for both extfrag and unusable_index lines
+parsePageIndex :: Parser (PageIndex a)
+parsePageIndex =
     -- Node 0, zone   Normal 0.000 0.972 1.000 1.000 1.000 -1.000 ...
-    SLABIndex <$> (spaces *> parseNode)
+    PageIndex <$> (spaces *> parseNode)
               <*> (char ',' *> spaces *> parseZone)
               <*> many (spaces *> choice [Nothing <$ char '-' <* double, Just <$> double] )
   where

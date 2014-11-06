@@ -23,8 +23,8 @@ exUnusableStr =
        "Node 0, zone    DMA32 0.000 0.003 0.067 0.128 "
     <> "0.179 0.231 0.290 0.356 0.417 0.525 0.538"
 
-exUnusable :: SLABIndex Unusable
-exUnusable = SLABIndex 0 "DMA32"
+exUnusable :: PageIndex Unusable
+exUnusable = PageIndex 0 "DMA32"
     [Just x | x <- [ 0, 0.003, 0.067, 0.128, 0.179, 0.231, 0.290
                    , 0.356, 0.417, 0.525, 0.538 ]]
 
@@ -33,8 +33,8 @@ exExtfragStr =
        "Node 0, zone   Normal -1.000 -1.000 -1.000 -1.000 "
     <> "-1.000 -1.000 -1.000 -1.000 -1.000 -1.000 0.998"
 
-exExtfrag :: SLABIndex Unusable
-exExtfrag = SLABIndex 0 "Normal" (replicate 10 Nothing ++ [Just 0.998])
+exExtfrag :: PageIndex Unusable
+exExtfrag = PageIndex 0 "Normal" (replicate 10 Nothing ++ [Just 0.998])
 
 testImpl :: CheckImpl
 testImpl = debugFSImpl "./fixtures/unusable_index" "./fixtures/extfrag_index"
@@ -42,15 +42,15 @@ testImpl = debugFSImpl "./fixtures/unusable_index" "./fixtures/extfrag_index"
 main :: IO ()
 main = hspec $ do
     describe "Parser" $ do
-        it "parses unusable slab index" $
-            shouldParse parseSLABIndex exUnusableStr exUnusable
+        it "parses unusable page index" $
+            shouldParse parsePageIndex exUnusableStr exUnusable
 
-        it "parses multiple lines of slab index" $
+        it "parses multiple lines of page index" $
             let ls = unlines $ replicate 10 exUnusableStr
-            in shouldParse (some parseSLABIndex) ls (replicate 10 exUnusable)
+            in shouldParse (some parsePageIndex) ls (replicate 10 exUnusable)
 
-        it "parses extfrag slab index" $
-            shouldParse parseSLABIndex exExtfragStr exExtfrag
+        it "parses extfrag page index" $
+            shouldParse parsePageIndex exExtfragStr exExtfrag
 
     describe "debugFS impl" $
         it "parses example debugfs files" $ do
@@ -106,7 +106,7 @@ main = hspec $ do
 
         it "has perfdata" $ do
             (_, (_, ps)) <- runNagiosPlugin' $ plugin testImpl (PluginOpts 1 1 1 1)
-            length ps `shouldBe` 44 -- 11 slab magnitudes * 4
+            length ps `shouldBe` 44 -- 11 page magnitudes * 4
 
 shouldPlugin :: PluginOpts -> CheckStatus -> Text -> Expectation
 shouldPlugin opts status info = do
