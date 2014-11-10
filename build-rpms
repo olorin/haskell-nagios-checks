@@ -4,7 +4,8 @@ MAJOR=$1
 MINOR=$2
 
 
-# cabal update
+cabal update
+
 if [ -d "nagios-check" ]; then
         pushd nagios-check
         git pull
