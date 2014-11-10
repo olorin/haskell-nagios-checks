@@ -4,11 +4,15 @@ MAJOR=$1
 MINOR=$2
 
 cabal update
+git clone https://github.com/fractalcat/nagios-check
 
 for f in *; do
-	if [[ -d $f ]]; then
-		pushd f
+	if [[ -d "$f" ]]; then
+		pushd "$f"
+                [ -f "cabal.sandbox.config" ] && cabal sandbox delete
+
 		cabal sandbox init
+                cabal sandbox add-source ../nagios-checks
 		cabal install --prefix="$(realpath ../artefacts)"
 		popd
 	fi
