@@ -11,16 +11,6 @@ cabal list > /dev/null
 sed -r -i "s,^(remote-repo: hackage.haskell.org.*)$,\1\nremote-repo: hackage.syd1.anchor.net.au:http://hackage.syd1.anchor.net.au/packages/archive," /home/jenkins/.cabal/config
 cabal update
 
-if [ -d "nagios-check" ]; then
-        pushd nagios-check
-        git pull
-        popd
-else
-        git clone https://github.com/fractalcat/nagios-check
-fi
-
-mkdir -p artefacts
-
 for f in check-*; do
     if [[ -d "$f" ]]; then
         pushd "$f"
@@ -28,7 +18,7 @@ for f in check-*; do
         cabal sandbox init
         cabal sandbox add-source ../nagios-check/
 
-        cabal install
+        cabal install -j
 
         cp .cabal-sandbox/bin/* ../artefacts
         popd
