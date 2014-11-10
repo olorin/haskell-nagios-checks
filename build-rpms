@@ -19,8 +19,8 @@ for f in check-*; do
     if [[ -d "$f" ]]; then
         pushd "$f"
 
-        [ -d ".cabal-sandbox" ] || cabal sandbox init
-        [ -f ".cabal-sandbox/add-source-timestamps" ] || cabal sandbox add-source ../nagios-check/
+        cabal sandbox init
+        cabal sandbox add-source ../nagios-check/
 
         cabal install
 
@@ -30,7 +30,7 @@ for f in check-*; do
 done
 
 # Build an RPM package.
-yum install rpm-build rpmdevtools
+sudo yum install rpm-build rpmdevtools
 rpmdev-setuptree
 
 tar czf rpm/SOURCES/haskell-nagios-checks-bin.tar.gz artefacts/
