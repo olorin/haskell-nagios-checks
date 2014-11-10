@@ -16,7 +16,6 @@ for f in check-*; do
         pushd "$f"
 
         cabal sandbox init
-        cabal sandbox add-source ../nagios-check/
 
         cabal install -j
 
