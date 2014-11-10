@@ -3,7 +3,9 @@
 MAJOR=$1
 MINOR=$2
 
-
+# Force creation of $HOME/.cabal/config
+cabal list > /dev/null
+sed -r -i "s,^(remote-repo: hackage.haskell.org.*)$,\1\nremote-repo: hackage.syd1.anchor.net.au:http://hackage.syd1.anchor.net.au/packages/archive," /home/jenkins/.cabal/config
 cabal update
 
 if [ -d "nagios-check" ]; then
