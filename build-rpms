@@ -32,16 +32,18 @@ for f in check-*; do
     fi
 done
 
+mv artefacts "haskell-nagios-checks-${VERSION}"
+mkdir -p packages
+
 ##
 ## Build an RPM package.
 ##
 
 rpmdev-setuptree
 
-tar czf rpm/SOURCES/haskell-nagios-checks-bin.tar.gz artefacts/
-pushd rpm
-rpmbuild -ba ../pkg/centos/haskell-nagios-checks.spec
-popd
+tar czf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" "haskell-nagios-checks-${VERSION}"
+rpmbuild -ba $ROOT/pkg/centos/haskell-nagios-checks.spec
+cp $HOME/rpmbuild/RPMS/*.rpm packages/
 
 ##
 ## Build a DEB package.

@@ -1,4 +1,4 @@
-Name:	        haskell-nagios-checks
+Name:		haskell-nagios-checks
 Version:	1.0
 Release:	0anchor1%{?dist}
 Summary:	Various nagios checks written in Haskell.
@@ -6,11 +6,11 @@ Summary:	Various nagios checks written in Haskell.
 Group:		Development/Libraries
 License:	BSD
 URL:		https://github.com/anchor/haskell-nagios-checks
-Source0:	haskell-nagios-checks-bin.tar.gz
+Source0:	haskell-nagios-checks-%{version}.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	ghc >= 7.8.3
-BuildRequires:  cabal-install
+BuildRequires:	cabal-install
 Requires:	gmp
 
 %description
@@ -22,16 +22,21 @@ programming language.
 %global ghc_without_dynamic 1
 
 %prep
-%setup -q
+%setup
 
 %build
+
 %install
-install -m 0755 check-page-fragmentation %{_bindir}/usr/bin
+mkdir -p %{buildroot}%{_bindir}
+install -m 0755 check-page-fragmentation %{buildroot}%{_bindir}
+
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
+
 %post
 echo "Nagios checks installed:"
 echo "    /usr/bin/check-page-fragmentation"
+
 %files
 %defattr(-,root,root,-)
 %{_bindir}/check-page-fragmentation
