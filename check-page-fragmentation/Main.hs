@@ -60,10 +60,10 @@ validatePluginOpts :: PluginOpts -> Except Text PluginOpts
 validatePluginOpts opts =  do
     validate warnMagnitude "warn-magnitude" (<) "<" 0
     validate critMagnitude "crit-magnitude" (<) "<" 0
-    validate warnUnusable  "unusable-warn" (<) "<" 0
-    validate warnUnusable  "unusable-warn" (>) ">" 1
-    validate critUnusable  "unusable-crit" (<) "<" 0
-    validate critUnusable  "unusable-crit" (>) ">" 1
+    validate warnUnusable  "unusable-warn"  (<) "<" 0
+    validate warnUnusable  "unusable-warn"  (>) ">" 1
+    validate critUnusable  "unusable-crit"  (<) "<" 0
+    validate critUnusable  "unusable-crit"  (>) ">" 1
     return opts
   where
     validate lense name p operator v = do
