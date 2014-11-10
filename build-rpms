@@ -1,15 +1,55 @@
 #!/bin/bash
+set -eu
 
 MAJOR=$1
 MINOR=$2
+VERSION="${MAJOR}.${MINOR}"
+ROOT=$(realpath $(pwd))
 
+# Force creation of $HOME/.cabal/config
+cabal list > /dev/null
+sed -r -i "s,^(remote-repo: hackage.haskell.org.*)$,\1\nremote-repo: hackage.syd1.anchor.net.au:http://hackage.syd1.anchor.net.au/packages/archive," /home/jenkins/.cabal/config
 cabal update
 
-for f in *; do
-	if [[ -d $f ]]; then
-		pushd f
-		cabal sandbox init
-		cabal install --prefix="$(realpath ../artefacts)"
-		popd
-	fi
+if [ -d "nagios-check" ]; then
+        pushd nagios-check
+        git pull
+        popd
+else
+        git clone https://github.com/fractalcat/nagios-check
+fi
+
+mkdir -p artefacts
+
+for f in check-*; do
+    if [[ -d "$f" ]]; then
+        pushd "$f"
+
+        cabal sandbox init
+        cabal sandbox add-source ../nagios-check/
+
+        cabal install
+
+        cp .cabal-sandbox/bin/* ../artefacts
+        popd
+    fi
 done
+
+mv artefacts "haskell-nagios-checks-${VERSION}"
+mkdir -p packages
+
+##
+## Build an RPM package.
+##
+
+rpmdev-setuptree
+
+tar czf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" "haskell-nagios-checks-${VERSION}"
+rpmbuild -ba $ROOT/pkg/centos/haskell-nagios-checks.spec --define "version ${VERSION}"
+find $HOME/rpmbuild/RPMS/ -type f | xargs -n 1 -I % cp % packages/
+
+##
+## Build a DEB package.
+##
+
+echo TODO
