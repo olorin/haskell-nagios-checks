@@ -32,11 +32,19 @@ for f in check-*; do
     fi
 done
 
-# Build an RPM package.
-sudo yum install rpm-build rpmdevtools
+##
+## Build an RPM package.
+##
+
 rpmdev-setuptree
 
 tar czf rpm/SOURCES/haskell-nagios-checks-bin.tar.gz artefacts/
-
 pushd rpm
 rpmbuild -ba ../pkg/centos/haskell-nagios-checks.spec
+popd
+
+##
+## Build a DEB package.
+##
+
+echo TODO
