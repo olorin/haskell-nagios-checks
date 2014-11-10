@@ -17,7 +17,7 @@ for f in check-*; do
 
         cabal sandbox init
 
-        cabal install -j
+        cabal install
 
         cp .cabal-sandbox/bin/* ../artefacts
         popd
