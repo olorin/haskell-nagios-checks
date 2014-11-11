@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 
 MAJOR=$1
 MINOR=$2
