@@ -4,11 +4,11 @@ set -eux
 MAJOR=$1
 MINOR=$2
 PATCH=$3
-VERSION="${MAJOR}.${MINOR}.${PATCH}"
+VERSION="${MAJOR}.${MINOR}"
 ROOT=$(realpath $(pwd))
 
 echo
-echo "BUILDING VERSION ${VERSION}"
+echo "BUILDING VERSION ${VERSION} - ${PATCH}"
 echo
 
 # Force creation of $HOME/.cabal/config
@@ -38,8 +38,10 @@ mkdir -p packages
 
 rpmdev-setuptree
 
-tar czf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" "haskell-nagios-checks-${VERSION}"
-rpmbuild -bb $ROOT/pkg/centos/haskell-nagios-checks.spec --define "version ${VERSION}"
+tar czf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" \
+        "haskell-nagios-checks-${VERSION}"
+rpmbuild -bb --define "build_number $PATCH" \
+        $ROOT/pkg/centos/haskell-nagios-checks.spec
 find $HOME/rpmbuild/RPMS/ -type f | xargs -n 1 -I % cp % packages/
 
 ##

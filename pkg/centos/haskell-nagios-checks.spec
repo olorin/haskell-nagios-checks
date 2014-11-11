@@ -1,6 +1,6 @@
 Name:		haskell-nagios-checks
 Version:	1.0
-Release:	0.0anchor1%{?dist}
+Release:	0.0anchor%{?build_number}%{!?build_number:1}%{?dist}
 Summary:	Various nagios checks written in Haskell.
 
 Group:		Development/Libraries
