@@ -41,6 +41,9 @@ mkdir -p packages
 
 rpmdev-setuptree
 
+# Make rpmbuild stop with the debuginfo packages.
+echo '%debug_package %{nil}' > $HOME/.rpmmacros
+
 tar czvf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" \
         "haskell-nagios-checks-${VERSION}"
 rpmbuild -bb --define "build_number $PATCH" \
