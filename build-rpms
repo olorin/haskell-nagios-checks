@@ -16,6 +16,8 @@ cabal list > /dev/null
 sed -r -i "s,^(remote-repo: hackage.haskell.org.*)$,\1\nremote-repo: hackage.syd1.anchor.net.au:http://hackage.syd1.anchor.net.au/packages/archive," /home/jenkins/.cabal/config
 cabal update
 
+mkdir artefacts
+
 for f in check-*; do
     if [[ -d "$f" ]]; then
         pushd "$f"
@@ -24,7 +26,7 @@ for f in check-*; do
 
         cabal install
 
-        cp .cabal-sandbox/bin/* ../artefacts
+        cp .cabal-sandbox/bin/* ../artefacts/
         popd
     fi
 done
