@@ -3,8 +3,13 @@ set -eu
 
 MAJOR=$1
 MINOR=$2
-VERSION="${MAJOR}.${MINOR}"
+PATCH=$3
+VERSION="${MAJOR}.${MINOR}.${PATCH}"
 ROOT=$(realpath $(pwd))
+
+echo
+echo "BUILDING VERSION ${VERSION}"
+echo
 
 # Force creation of $HOME/.cabal/config
 cabal list > /dev/null
@@ -34,7 +39,7 @@ mkdir -p packages
 rpmdev-setuptree
 
 tar czf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" "haskell-nagios-checks-${VERSION}"
-rpmbuild -ba $ROOT/pkg/centos/haskell-nagios-checks.spec --define "version ${VERSION}"
+rpmbuild -bb $ROOT/pkg/centos/haskell-nagios-checks.spec --define "version ${VERSION}"
 find $HOME/rpmbuild/RPMS/ -type f | xargs -n 1 -I % cp % packages/
 
 ##
