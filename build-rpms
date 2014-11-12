@@ -46,7 +46,7 @@ echo '%debug_package %{nil}' > $HOME/.rpmmacros
 
 tar czvf "$HOME/rpmbuild/SOURCES/haskell-nagios-checks-${VERSION}.tar.gz" \
         "haskell-nagios-checks-${VERSION}"
-rpmbuild -bb --define "build_number $PATCH" \
+rpmbuild -bb --define "build_number $PATCH" --define "dist .el7" \
         $ROOT/pkg/centos/haskell-nagios-checks.spec
 find $HOME/rpmbuild/RPMS/ -type f | xargs -n 1 -I % cp % packages/
 
