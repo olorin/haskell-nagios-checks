@@ -173,6 +173,14 @@ plugin impl opts = do
 
     let path = traversed . magnitudes . traversed . _Just
     let mean = sumOf path unusable / fromIntegral (lengthOf path unusable)
+    addPerfDatum (sformat "mean_fragmentation")
+                 (RealValue (mean * 100))
+                 Percent
+                 Nothing
+                 Nothing
+                 Nothing
+                 Nothing
+
     addResult OK (sformat ("Mean fragmentation: " % prec 2 % "%") (mean * 100))
 
 -- | An implementation of a "getter" of 'ExtfragIndex's and 'UnusableIndex's.
