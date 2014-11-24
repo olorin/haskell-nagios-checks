@@ -163,24 +163,16 @@ plugin impl opts = do
         forOf_ (magnitudes . itraversed . _Just . withIndex) u $ \(i, m) ->
             let msg = sformat (shown % " " % stext % " " % shown)
                               (u ^. node) (u ^. zone) (Magnitude i)
-            in addPerfDatum msg
-                            (RealValue (m * 100))
-                            Percent
-                            Nothing
-                            Nothing
-                            Nothing
-                            Nothing
+            in addBarePerfDatum msg
+                                (RealValue (m * 100))
+                                Percent
 
     let path = traversed . magnitudes . traversed . _Just
     let mean = sumOf path unusable / fromIntegral (lengthOf path unusable)
 
-    addPerfDatum "mean_fragmentation"
+    addBarePerfDatum "mean_fragmentation"
                  (RealValue $ mean * 100)
                  Percent
-                 Nothing
-                 Nothing
-                 Nothing
-                 Nothing
 
     addResult OK (sformat ("Mean fragmentation: " % prec 2 % "%") (mean * 100))
 
