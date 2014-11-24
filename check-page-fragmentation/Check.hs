@@ -171,8 +171,8 @@ plugin impl opts = do
     let mean = sumOf path unusable / fromIntegral (lengthOf path unusable)
 
     addBarePerfDatum "mean_fragmentation"
-                 (RealValue $ mean * 100)
-                 Percent
+                     (RealValue $ mean * 100)
+                     Percent
 
     addResult OK (sformat ("Mean fragmentation: " % prec 2 % "%") (mean * 100))
 
