@@ -106,7 +106,7 @@ main = hspec $ do
 
         it "has perfdata" $ do
             (_, (_, ps)) <- runNagiosPlugin' $ plugin testImpl (PluginOpts 1 1 1 1)
-            length ps `shouldBe` 44 -- 11 page magnitudes * 4
+            length ps `shouldBe` 45 -- 11 page magnitudes * 4 + 1 mean
 
 shouldPlugin :: PluginOpts -> CheckStatus -> Text -> Expectation
 shouldPlugin opts status info = do
