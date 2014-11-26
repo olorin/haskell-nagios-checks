@@ -47,7 +47,7 @@ test-suite           check-page-fragmentation-test
 
   build-depends:     base >=3 && <5,
                      bytestring,
-                     nagios-check,
+                     nagios-check >= 0.2,
                      hspec,
                      formatting,
                      trifecta,
