@@ -27,6 +27,27 @@ checkExchange result opts = do
 	    else return ()
 	Nothing -> return ()
 
+    case (mincritical opts) of
+        Just x -> 
+            if x > (confirm result) 
+	    then addResult Critical "Confirm Rate out of bounds"
+	    else return ()
+	Nothing -> return ()
+
+    case (maxwarning opts) of
+        Just x -> 
+            if x < (confirm result) 
+	    then addResult Warning "Confirm Rate out of bounds"
+	    else return ()
+	Nothing -> return ()
+
+    case (maxcritical opts) of
+        Just x -> 
+            if x < (confirm result) 
+	    then addResult Critical "Confirm Rate out of bounds"
+	    else return ()
+	Nothing -> return ()
+
 
 main :: IO ()
 main = do
