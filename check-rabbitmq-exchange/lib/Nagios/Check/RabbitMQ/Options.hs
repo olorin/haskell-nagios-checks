@@ -21,10 +21,26 @@ checkOptions :: Parser CheckOptions
 checkOptions = CheckOptions
     <$> strOption
         (long "hostname"
-        <> short 'h'
+        <> short 'H'
         <> value "localhost"
         <> metavar "HOSTNAME")
-    <*> (read <$> strOption
+    <*> strOption
         (long "queue"
         <> short 'q'
-        <> help "Name of the queue to check"))
+        <> help "Name of the queue to check")
+    <*> optional ( option auto
+        ( long "minwarning"
+        <> short 'w'
+        <> metavar "MINIMUM_WARN" ))
+    <*> optional ( option auto
+        ( long "mincritical"
+        <> short 'c'
+        <> metavar "MINIMUM_CRIT" ))
+    <*> optional ( option auto
+        ( long "maxwarning"
+        <> short 'W'
+        <> metavar "MAXIMUM_WARN" ))
+    <*> optional ( option auto
+        ( long "maxcritical"
+        <> short 'C'
+        <> metavar "MAXIMUM_CRIT" ))

@@ -37,7 +37,9 @@ executable nagios-plugin-rabbitmq-exchange
   build-depends:       base >=4.7 && <4.8,
                        bytestring,
                        mtl,
-                       nagios-plugin-rabbitmq-exchange
+                       nagios-plugin-rabbitmq-exchange,
+                       nagios-check,
+                       nagios-perfdata
 
   hs-source-dirs:      src
   default-language:    Haskell2010
