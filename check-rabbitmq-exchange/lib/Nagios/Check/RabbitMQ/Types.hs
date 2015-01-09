@@ -11,17 +11,15 @@ import           Data.Text(Text)
 import qualified Data.Text as T
 import           GHC.Generics
 
-
 data CheckOptions = CheckOptions
     { hostname    :: String
     , queue       :: String
+    , auth        :: Maybe String
     , minwarning  :: Maybe Int64
     , mincritical :: Maybe Int64
     , maxwarning  :: Maybe Int64
     , maxcritical :: Maybe Int64
     } deriving Show
-
-
 
 data MessageDetail = MessageDetail
     { confirm    :: Int64
@@ -34,6 +32,4 @@ instance FromJSON MessageDetail where
                         <$> ((o .: "message_stats") >>= (.: "confirm_details") >>= (.: "avg_rate"))
                         <*> ((o .: "message_stats") >>= (.: "publish_in_details") >>= (.: "avg_rate"))
                         <*> ((o .: "message_stats") >>= (.: "publish_out_details") >>= (.: "avg_rate"))
-
---instance ToJSON MessageDetail
 

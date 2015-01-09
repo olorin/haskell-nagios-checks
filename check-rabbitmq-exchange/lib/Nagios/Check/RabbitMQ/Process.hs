@@ -11,7 +11,7 @@ processExchange :: BSL.ByteString -> MessageDetail
 processExchange exchange =
     case decode exchange of
         Just x -> x
---        Nothing -> 
+        Nothing -> MessageDetail [] 
 {-
     case eitherDecode exchange of
         Left e  -> return []

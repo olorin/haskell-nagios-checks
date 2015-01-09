@@ -9,7 +9,7 @@ import qualified Data.ByteString.Lazy.Char8         as BSL
 
 import           Nagios.Check.RabbitMQ
 import           System.Nagios.Plugin
-
+import           Network.HTTP.Conduit (simpleHttp)
 
 checkExchange :: MessageDetail -> CheckOptions -> NagiosPlugin()
 checkExchange result opts = do
@@ -52,7 +52,15 @@ checkExchange result opts = do
 main :: IO ()
 main = do
     opts <- parseOptions
-    rawJSON <- liftIO $ BSL.readFile "test/sample_json/tidy_sample_exchange.json"
+    let hs = case auth opts of 
+             Just a  -> a ++ hostname opts
+             Nothing ->      hostname opts
+    let uri = concat $ ["http://", hs, "/#/exchanges/%2F/", queue opts]
+
+    putStrLn uri
+
+    rawJSON <- simpleHttp uri
+--    rawJSON <- liftIO $ BSL.readFile "test/sample_json/tidy_sample_exchange.json"
     let result = processExchange rawJSON
     runNagiosPlugin (checkExchange result opts)
 
