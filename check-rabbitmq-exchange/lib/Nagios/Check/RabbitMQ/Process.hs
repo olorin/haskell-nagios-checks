@@ -8,4 +8,4 @@ import           Nagios.Check.RabbitMQ.Types
 
 
 processExchange :: BSL.ByteString -> MessageDetail
-processExchange exchange = fromMaybe (MessageDetail 0 0 0) (decode exchange)
+processExchange exchange = fromMaybe (MessageDetail 9999 9999 9999) (decode exchange)

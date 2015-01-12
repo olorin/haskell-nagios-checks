@@ -4,13 +4,16 @@
 
 module Main where
 
+import           Control.Applicative
 import           Control.Monad
 import           Control.Monad.Trans
-import           Data.ByteString            (ByteString)
-import qualified Data.ByteString.Lazy.Char8 as BSL
+import           Data.Maybe
+import           Data.Monoid
+import qualified Data.ByteString.Char8 as BSC
 
 import           Nagios.Check.RabbitMQ
-import           Network.HTTP.Conduit       (simpleHttp)
+import           Network.HTTP.Client
+import           System.Environment
 import           System.Nagios.Plugin
 
 checkExchange :: MessageDetail -> CheckOptions -> NagiosPlugin ()
@@ -48,9 +51,20 @@ main = do
     username <- maybe "" BSC.pack <$> lookupEnv "RABBIT_USER"
     password <- maybe "" BSC.pack <$> lookupEnv "RABBIT_PASS"
 
-    let uri = concat [ "http://", hostname opts, "/api/exchanges/%2F/", exchange opts ]
-    rawJSON <- simpleHttp uri
---    rawJSON <- liftIO $ BSL.readFile "test/sample_json/tidy_sample_exchange.json"
-    let result = processExchange rawJSON
+    let baseUrl = concat [ "http://", hostname opts, "/api/exchanges/%2F/", exchange opts ]
+    authedRequest <- applyBasicAuth username password <$> parseUrl baseUrl
+
+    let q_params = [ ("lengths_age",    Just "60")
+                   , ("msg_rates_age",  Just "60")
+                   , ("msg_rates_incr", Just "60")
+                   ]
+    let q_authedRequest = setQueryString q_params authedRequest
+
+    print $ getUri q_authedRequest
+
+    manager <- newManager defaultManagerSettings
+    resp <- httpLbs q_authedRequest manager
+
+    let result = processExchange $ responseBody resp
     runNagiosPlugin (checkExchange result opts)
 
