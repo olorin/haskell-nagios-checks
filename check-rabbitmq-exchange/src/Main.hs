@@ -16,9 +16,9 @@ import           System.Nagios.Plugin
 checkExchange :: MessageDetail -> CheckOptions -> NagiosPlugin ()
 checkExchange MessageDetail{..} CheckOptions{..} = do
     addResult OK "Exchange rate within bounds"
-    addPerfDatum "rateConfirms"   (IntegralValue rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "ratePublishIn"  (IntegralValue ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "ratePublishOut" (IntegralValue ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "rateConfirms"   (RealValue rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "ratePublishIn"  (RealValue ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "ratePublishOut" (RealValue ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
 
     --- Check options, if available
     case minWarning of

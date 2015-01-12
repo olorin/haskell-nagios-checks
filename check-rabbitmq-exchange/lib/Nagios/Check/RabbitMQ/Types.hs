@@ -15,16 +15,16 @@ data CheckOptions = CheckOptions
     { hostname    :: String
     , queue       :: String
     , auth        :: Maybe String
-    , minWarning  :: Maybe Int64
-    , minCritical :: Maybe Int64
-    , maxWarning  :: Maybe Int64
-    , maxCritical :: Maybe Int64
+    , minWarning  :: Maybe Double
+    , minCritical :: Maybe Double
+    , maxWarning  :: Maybe Double
+    , maxCritical :: Maybe Double
     } deriving Show
 
 data MessageDetail = MessageDetail
-    { rateConfirms   :: Int64
-    , ratePublishIn  :: Int64
-    , ratePublishOut :: Int64
+    { rateConfirms   :: Double
+    , ratePublishIn  :: Double
+    , ratePublishOut :: Double
     } deriving (Show,Generic)
 
 instance FromJSON MessageDetail where
