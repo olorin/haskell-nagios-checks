@@ -1,61 +1,53 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 
 module Main where
 
+import           Control.Monad
 import           Control.Monad.Trans
-import           Data.ByteString                    (ByteString)
-import qualified Data.ByteString.Lazy.Char8         as BSL
+import           Data.ByteString            (ByteString)
+import qualified Data.ByteString.Lazy.Char8 as BSL
 
 import           Nagios.Check.RabbitMQ
+import           Network.HTTP.Conduit       (simpleHttp)
 import           System.Nagios.Plugin
-import           Network.HTTP.Conduit (simpleHttp)
 
-checkExchange :: MessageDetail -> CheckOptions -> NagiosPlugin()
-checkExchange result opts = do
+checkExchange :: MessageDetail -> CheckOptions -> NagiosPlugin ()
+checkExchange MessageDetail{..} CheckOptions{..} = do
     addResult OK "Exchange rate within bounds"
-
-    addPerfDatum "confirm"    (IntegralValue (confirm result)    ) NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "publishIn"  (IntegralValue (publishIn result)  ) NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "publishOut" (IntegralValue (publishOut result) ) NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "rateConfirms"   (IntegralValue rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "ratePublishIn"  (IntegralValue ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "ratePublishOut" (IntegralValue ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
 
     --- Check options, if available
-    case (minwarning opts) of
-        Just x -> 
-            if x > (confirm result) 
-	    then addResult Warning "Confirm Rate out of bounds"
-	    else return ()
-	Nothing -> return ()
+    case minWarning of
+        Just x  -> when (rateConfirms < x)
+                        (addResult Warning "Confirm Rate out of bounds")
+        Nothing -> return ()
 
-    case (mincritical opts) of
-        Just x -> 
-            if x > (confirm result) 
-	    then addResult Critical "Confirm Rate out of bounds"
-	    else return ()
-	Nothing -> return ()
+    case minCritical of
+        Just x -> when (rateConfirms < x)
+                       (addResult Critical "Confirm Rate out of bounds")
+        Nothing -> return ()
 
-    case (maxwarning opts) of
-        Just x -> 
-            if x < (confirm result) 
-	    then addResult Warning "Confirm Rate out of bounds"
-	    else return ()
-	Nothing -> return ()
+    case maxWarning of
+        Just x  -> when (rateConfirms > x)
+                        (addResult Warning "Confirm Rate out of bounds")
+        Nothing -> return ()
 
-    case (maxcritical opts) of
-        Just x -> 
-            if x < (confirm result) 
-	    then addResult Critical "Confirm Rate out of bounds"
-	    else return ()
-	Nothing -> return ()
-
+    case maxCritical of
+        Just x -> when (rateConfirms > x)
+                       (addResult Critical "Confirm Rate out of bounds")
+        Nothing -> return ()
 
 main :: IO ()
 main = do
     opts <- parseOptions
-    let hs = case auth opts of 
-             Just a  -> a ++ hostname opts
+    let hs = case auth opts of
+             Just a  -> a ++ "@" ++ hostname opts
              Nothing ->      hostname opts
-    let uri = concat $ ["http://", hs, "/#/exchanges/%2F/", queue opts]
+    let uri = concat ["http://", hs, "/api/exchanges/%2F/", queue opts]
 
     putStrLn uri
 
