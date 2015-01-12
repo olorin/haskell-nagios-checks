@@ -48,7 +48,7 @@ main = do
     username <- maybe "" BSC.pack <$> lookupEnv "RABBIT_USER"
     password <- maybe "" BSC.pack <$> lookupEnv "RABBIT_PASS"
 
-    let uri = concat [ "http://", hostname opts, "/api/exchanges/%2F/", queue opts ]
+    let uri = concat [ "http://", hostname opts, "/api/exchanges/%2F/", exchange opts ]
     rawJSON <- simpleHttp uri
 --    rawJSON <- liftIO $ BSL.readFile "test/sample_json/tidy_sample_exchange.json"
     let result = processExchange rawJSON

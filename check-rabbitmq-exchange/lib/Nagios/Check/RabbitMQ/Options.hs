@@ -25,9 +25,9 @@ checkOptions = CheckOptions
         <> value "localhost"
         <> metavar "HOSTNAME")
     <*> strOption
-        (long "queue"
-        <> short 'q'
-        <> help "Name of the queue to check")
+        (long "exchange"
+        <> short 'e'
+        <> help "Name of the exchange to check")
     <*> optional ( option auto
         ( long "minwarning"
         <> short 'w'

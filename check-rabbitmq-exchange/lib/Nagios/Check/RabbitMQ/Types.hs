@@ -13,7 +13,7 @@ import           GHC.Generics
 
 data CheckOptions = CheckOptions
     { hostname    :: String
-    , queue       :: String
+    , exchange    :: String
     , minWarning  :: Maybe Double
     , minCritical :: Maybe Double
     , maxWarning  :: Maybe Double
