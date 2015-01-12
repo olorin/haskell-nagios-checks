@@ -44,13 +44,11 @@ checkExchange MessageDetail{..} CheckOptions{..} = do
 main :: IO ()
 main = do
     opts <- parseOptions
-    let hs = case auth opts of
-             Just a  -> a ++ "@" ++ hostname opts
-             Nothing ->      hostname opts
-    let uri = concat ["http://", hs, "/api/exchanges/%2F/", queue opts]
 
-    putStrLn uri
+    username <- maybe "" BSC.pack <$> lookupEnv "RABBIT_USER"
+    password <- maybe "" BSC.pack <$> lookupEnv "RABBIT_PASS"
 
+    let uri = concat [ "http://", hostname opts, "/api/exchanges/%2F/", queue opts ]
     rawJSON <- simpleHttp uri
 --    rawJSON <- liftIO $ BSL.readFile "test/sample_json/tidy_sample_exchange.json"
     let result = processExchange rawJSON

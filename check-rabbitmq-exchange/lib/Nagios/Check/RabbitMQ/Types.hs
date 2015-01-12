@@ -14,7 +14,6 @@ import           GHC.Generics
 data CheckOptions = CheckOptions
     { hostname    :: String
     , queue       :: String
-    , auth        :: Maybe String
     , minWarning  :: Maybe Double
     , minCritical :: Maybe Double
     , maxWarning  :: Maybe Double

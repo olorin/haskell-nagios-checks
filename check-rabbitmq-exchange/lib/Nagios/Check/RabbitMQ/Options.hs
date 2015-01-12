@@ -28,11 +28,6 @@ checkOptions = CheckOptions
         (long "queue"
         <> short 'q'
         <> help "Name of the queue to check")
-    <*> optional ( strOption
-        (long "authentication"
-	<> short 'a'
-	<> help "Authentication for api e.g. 'username:password'"
-	<> metavar "USERNAME:PASSWORD"))
     <*> optional ( option auto
         ( long "minwarning"
         <> short 'w'
