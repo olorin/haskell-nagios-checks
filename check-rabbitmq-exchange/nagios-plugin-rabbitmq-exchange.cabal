@@ -25,7 +25,8 @@ library
                      aeson,
                      optparse-applicative,
                      bytestring,
-                     text
+                     text,
+                     nagios-check
 
   default-language:  Haskell2010
 
@@ -38,7 +39,6 @@ executable nagios-plugin-rabbitmq-exchange
                        bytestring,
                        mtl,
                        nagios-plugin-rabbitmq-exchange,
-                       nagios-check,
                        nagios-perfdata,
                        http-client
 

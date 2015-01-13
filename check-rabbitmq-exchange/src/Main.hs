@@ -1,6 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 
 module Main where
 
@@ -14,35 +12,6 @@ import qualified Data.ByteString.Char8 as BSC
 import           Nagios.Check.RabbitMQ
 import           Network.HTTP.Client
 import           System.Environment
-import           System.Nagios.Plugin
-
-checkExchange :: MessageDetail -> CheckOptions -> NagiosPlugin ()
-checkExchange MessageDetail{..} CheckOptions{..} = do
-    addResult OK "Exchange rate within bounds"
-    addPerfDatum "rateConfirms"   (RealValue rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "ratePublishIn"  (RealValue ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "ratePublishOut" (RealValue ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
-
-    --- Check options, if available
-    case minWarning of
-        Just x  -> when (rateConfirms < x)
-                        (addResult Warning "Confirm Rate out of bounds")
-        Nothing -> return ()
-
-    case minCritical of
-        Just x -> when (rateConfirms < x)
-                       (addResult Critical "Confirm Rate out of bounds")
-        Nothing -> return ()
-
-    case maxWarning of
-        Just x  -> when (rateConfirms > x)
-                        (addResult Warning "Confirm Rate out of bounds")
-        Nothing -> return ()
-
-    case maxCritical of
-        Just x -> when (rateConfirms > x)
-                       (addResult Critical "Confirm Rate out of bounds")
-        Nothing -> return ()
 
 main :: IO ()
 main = do
@@ -64,7 +33,4 @@ main = do
 
     manager <- newManager defaultManagerSettings
     resp <- httpLbs q_authedRequest manager
-
-    let result = processExchange $ responseBody resp
-    runNagiosPlugin (checkExchange result opts)
-
+    checkRawExchange (responseBody resp) opts
