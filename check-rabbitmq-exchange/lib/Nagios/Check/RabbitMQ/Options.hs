@@ -28,19 +28,19 @@ checkOptions = CheckOptions
         (long "exchange"
         <> short 'e'
         <> help "Name of the exchange to check")
-    <*> optional ( option auto
+    <*> (minThreshold <$> optional ( option auto
         ( long "minwarning"
         <> short 'w'
-        <> metavar "MINIMUM_WARN" ))
-    <*> optional ( option auto
+        <> metavar "MINIMUM_WARN" )))
+    <*> (minThreshold <$> optional ( option auto
         ( long "mincritical"
         <> short 'c'
-        <> metavar "MINIMUM_CRIT" ))
-    <*> optional ( option auto
+        <> metavar "MINIMUM_CRIT" )))
+    <*> (maxThreshold <$> optional ( option auto
         ( long "maxwarning"
         <> short 'W'
-        <> metavar "MAXIMUM_WARN" ))
-    <*> optional ( option auto
+        <> metavar "MAXIMUM_WARN" )))
+    <*> (maxThreshold <$> optional ( option auto
         ( long "maxcritical"
         <> short 'C'
-        <> metavar "MAXIMUM_CRIT" ))
+        <> metavar "MAXIMUM_CRIT" )))

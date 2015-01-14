@@ -25,22 +25,10 @@ checkExchange MessageDetail{..} CheckOptions{..} = runNagiosPlugin $ do
     addPerfDatum "ratePublishOut" (RealValue ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
 
     --- Check options, if available
-    case minWarning of
-        Just x  -> when (rateConfirms < x)
-                        (addResult Warning "Confirm Rate out of bounds")
-        Nothing -> return ()
+    unless (rateConfirms `inBoundsOf` minWarning &&
+            rateConfirms `inBoundsOf` maxWarning)
+           (addResult Warning "Confirm Rate out of bounds")
 
-    case minCritical of
-        Just x -> when (rateConfirms < x)
-                       (addResult Critical "Confirm Rate out of bounds")
-        Nothing -> return ()
-
-    case maxWarning of
-        Just x  -> when (rateConfirms > x)
-                        (addResult Warning "Confirm Rate out of bounds")
-        Nothing -> return ()
-
-    case maxCritical of
-        Just x -> when (rateConfirms > x)
-                       (addResult Critical "Confirm Rate out of bounds")
-        Nothing -> return ()
+    unless (rateConfirms `inBoundsOf` minCritical &&
+            rateConfirms `inBoundsOf` maxCritical)
+           (addResult Critical "Confirm Rate out of bounds")

@@ -11,13 +11,31 @@ import           Data.Text(Text)
 import qualified Data.Text as T
 import           GHC.Generics
 
+data Threshold = NoThreshold
+               | MinThreshold Double
+               | MaxThreshold Double
+  deriving Show
+
+inBoundsOf :: Double -> Threshold -> Bool
+_ `inBoundsOf` NoThreshold      = True
+x `inBoundsOf` (MinThreshold y) = x >= y
+x `inBoundsOf` (MaxThreshold y) = x <= y
+
+minThreshold :: Maybe Double -> Threshold
+minThreshold Nothing  = NoThreshold
+minThreshold (Just x) = MinThreshold x
+
+maxThreshold :: Maybe Double -> Threshold
+maxThreshold Nothing  = NoThreshold
+maxThreshold (Just x) = MinThreshold x
+
 data CheckOptions = CheckOptions
     { hostname    :: String
     , exchange    :: String
-    , minWarning  :: Maybe Double
-    , minCritical :: Maybe Double
-    , maxWarning  :: Maybe Double
-    , maxCritical :: Maybe Double
+    , minWarning  :: Threshold
+    , minCritical :: Threshold
+    , maxWarning  :: Threshold
+    , maxCritical :: Threshold
     } deriving Show
 
 data MessageDetail = MessageDetail
