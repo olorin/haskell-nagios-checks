@@ -18,6 +18,7 @@ haskell-nagios-checks is a collection of Nagios checks written in the Haskell
 programming language.
 
 * check-page-fragmentation reports memory fragmentation reported by the kernel.
+* check-rabbitmq-exchange reports throughput of a specified RabbitMQ exchange.
 
 %global ghc_without_dynamic 1
 
@@ -29,6 +30,7 @@ programming language.
 %install
 mkdir -p %{buildroot}%{_bindir}
 install -m 0755 check-page-fragmentation %{buildroot}%{_bindir}
+install -m 0755 check-rabbitmq-exchange %{buildroot}%{_bindir}
 
 %clean
 rm -rf %{buildroot}
@@ -36,7 +38,9 @@ rm -rf %{buildroot}
 %post
 echo "Nagios checks installed:"
 echo "    /usr/bin/check-page-fragmentation"
+echo "    /usr/bin/check-rabbitmq-exchange"
 
 %files
 %defattr(-,root,root,-)
 %{_bindir}/check-page-fragmentation
+%{_bindir}/check-rabbitmq-exchange
