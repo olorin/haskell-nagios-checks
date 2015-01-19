@@ -29,8 +29,6 @@ main = do
                    ]
     let q_authedRequest = setQueryString q_params authedRequest
 
-    print $ getUri q_authedRequest
-
     manager <- newManager defaultManagerSettings
     resp <- httpLbs q_authedRequest manager
     checkRawExchange (responseBody resp) opts
