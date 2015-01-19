@@ -30,7 +30,8 @@ executable check-page-fragmentation
                      trifecta,
                      lens,
                      optparse-applicative,
-                     transformers
+                     transformers,
+                     blaze-markup <= 0.6.2
 
   ghc-options:       -O2
                      -threaded
@@ -53,6 +54,7 @@ test-suite           check-page-fragmentation-test
                      trifecta,
                      text,
                      lens,
-                     transformers
+                     transformers,
+                     blaze-markup <= 0.6.2
 
   ghc-options:       -fwarn-incomplete-patterns -threaded
