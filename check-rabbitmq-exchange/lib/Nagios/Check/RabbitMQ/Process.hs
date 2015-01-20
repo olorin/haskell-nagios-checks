@@ -27,8 +27,8 @@ checkExchange MessageDetail{..} CheckOptions{..} = runNagiosPlugin $ do
     --- Check options, if available
     unless (rateConfirms `inBoundsOf` minWarning &&
             rateConfirms `inBoundsOf` maxWarning)
-           (addResult Warning "Confirm Rate out of bounds")
+           (addResult Warning "Confirm rate out of bounds")
 
     unless (rateConfirms `inBoundsOf` minCritical &&
             rateConfirms `inBoundsOf` maxCritical)
-           (addResult Critical "Confirm Rate out of bounds")
+           (addResult Critical "Confirm rate out of bounds")
