@@ -15,6 +15,7 @@ import           System.Nagios.Plugin (addResult, runNagiosPlugin, CheckStatus(.
 import           Network.HTTP.Client
 import           Network.HTTP.Types.Status (Status(..))   
 import           Control.Exception
+import           System.Exit
 
 main :: IO ()
 main = do
@@ -38,7 +39,7 @@ main = do
     resp <- catch (httpLbs q_authedRequest manager)
     	(\e -> do let err = show (e :: HttpException)
 		  runNagiosPlugin $ addResult Unknown $ T.pack err
-		  error ""
+		  exitWith (ExitFailure 3)
         )
     
     checkRawExchange (responseBody resp) opts
