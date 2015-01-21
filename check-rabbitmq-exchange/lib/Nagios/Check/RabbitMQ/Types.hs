@@ -44,9 +44,22 @@ data MessageDetail = MessageDetail
     , ratePublishOut :: Double
     } deriving (Show,Generic)
 
+{-
+ - data ConnectionCount = ConnectionCount 
+    { receiveRate :: Double
+    , sendRate :: Double
+    } deriving (Show, Generic)
+    -}
+
 instance FromJSON MessageDetail where
     parseJSON (Object o) = MessageDetail
                         <$> ((o .: "message_stats") >>= (.: "confirm_details") >>= (.: "avg_rate"))
                         <*> ((o .: "message_stats") >>= (.: "publish_in_details") >>= (.: "avg_rate"))
                         <*> ((o .: "message_stats") >>= (.: "publish_out_details") >>= (.: "avg_rate"))
 
+{-
+instance FromJSON ConnectionCount where
+    parseJSON (Object o) = ConnectionCount
+                        <$> ((o .: "recv_oct_details") >>= (.: "rate"))
+                        <*> ((o .: "send_oct_details") >>= (.: "rate"))
+			-}

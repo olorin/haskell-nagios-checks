@@ -9,6 +9,7 @@ import           Control.Monad.Trans
 import qualified Data.ByteString.Char8 as BSC
 import           Data.Maybe
 import           Data.Monoid
+import           Data.Aeson
 import qualified Data.Text             as T
 import           Nagios.Check.RabbitMQ
 import           Network.HTTP.Client
@@ -24,7 +25,31 @@ main = do
     username <- maybe "" BSC.pack <$> lookupEnv "RABBIT_USER"
     password <- maybe "" BSC.pack <$> lookupEnv "RABBIT_PASS"
 
-    let baseUrl = concat [ "http://", hostname opts, "/api/exchanges/%2F/", exchange opts ]
+    manager <- newManager defaultManagerSettings
+
+    let baseUrl = concat [ "http://", hostname opts, "/api" ]
+
+
+    -- Connection count
+    let connUrl = concat [ baseUrl, "/connections" ]
+    connRequest <- applyBasicAuth username password <$> parseUrl connUrl
+
+    resp' <- catch (httpLbs connRequest manager)
+        (\e -> do let err = show (e :: HttpException)
+                  runNagiosPlugin $ addResult Unknown $ T.pack err
+                  exitWith (ExitFailure 3)
+        )
+--    print $ length $ parseJSON . resp'
+
+--    let connCount = checkConnectionCount (responseBody resp')
+--    let connCount = length . decode (responseBody resp')
+    checkConnCount (responseBody resp')
+
+--    addPerfDatum "connectionCount" (RealValue connCount) NullUnit Nothing Nothing Nothing Nothing
+--    checkConnLength (responseBody resp) opts
+
+    -- Full Exchange rates check
+    let rateUrl = concat [ baseUrl, "/exchanges/%2F/", exchange opts ]
     authedRequest <- applyBasicAuth username password <$> parseUrl baseUrl
 
     let q_params = [ ("lengths_age",    Just "60")
@@ -33,7 +58,6 @@ main = do
                    ]
     let q_authedRequest = setQueryString q_params authedRequest
 
-    manager <- newManager defaultManagerSettings
 
     resp <- catch (httpLbs q_authedRequest manager)
     	(\e -> do let err = show (e :: HttpException)
@@ -42,3 +66,4 @@ main = do
         )
 
     checkRawExchange (responseBody resp) opts
+
