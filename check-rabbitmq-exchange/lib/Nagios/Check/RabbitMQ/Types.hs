@@ -1,14 +1,14 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DeriveGeneric #-}
 
 module Nagios.Check.RabbitMQ.Types where
 
-import qualified Data.ByteString.Char8 as BSC
-import           Data.Int
 import           Control.Applicative
 import           Data.Aeson
-import           Data.Text(Text)
-import qualified Data.Text as T
+import qualified Data.ByteString.Char8 as BSC
+import           Data.Int
+import           Data.Text             (Text)
+import qualified Data.Text             as T
 import           GHC.Generics
 
 data Threshold = NoThreshold

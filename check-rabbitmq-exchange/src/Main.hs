@@ -3,19 +3,19 @@
 module Main where
 
 import           Control.Applicative
+import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Trans
+import qualified Data.ByteString.Char8 as BSC
 import           Data.Maybe
 import           Data.Monoid
-import qualified Data.ByteString.Char8 as BSC
+import qualified Data.Text             as T
 import           Nagios.Check.RabbitMQ
-import           System.Environment
-import qualified Data.Text as T
-import           System.Nagios.Plugin (addResult, runNagiosPlugin, CheckStatus(..))
 import           Network.HTTP.Client
-import           Network.HTTP.Types.Status (Status(..))   
-import           Control.Exception
+import           System.Environment
 import           System.Exit
+import           System.Nagios.Plugin  (CheckStatus (..), addResult,
+                                        runNagiosPlugin)
 
 main :: IO ()
 main = do
@@ -25,7 +25,6 @@ main = do
     password <- maybe "" BSC.pack <$> lookupEnv "RABBIT_PASS"
 
     let baseUrl = concat [ "http://", hostname opts, "/api/exchanges/%2F/", exchange opts ]
-
     authedRequest <- applyBasicAuth username password <$> parseUrl baseUrl
 
     let q_params = [ ("lengths_age",    Just "60")
@@ -41,6 +40,5 @@ main = do
 		  runNagiosPlugin $ addResult Unknown $ T.pack err
 		  exitWith (ExitFailure 3)
         )
-    
-    checkRawExchange (responseBody resp) opts
 
+    checkRawExchange (responseBody resp) opts

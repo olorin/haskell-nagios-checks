@@ -9,14 +9,14 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-import Check
-import Control.Applicative
-import Control.Lens
-import Data.Monoid
-import Data.Text (Text)
-import System.Nagios.Plugin
-import Test.Hspec
-import Text.Trifecta
+import           Check
+import           Control.Applicative
+import           Control.Lens
+import           Data.Monoid
+import           Data.Text            (Text)
+import           System.Nagios.Plugin
+import           Test.Hspec
+import           Text.Trifecta
 
 exUnusableStr :: String
 exUnusableStr =

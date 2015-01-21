@@ -1,8 +1,8 @@
 module Nagios.Check.RabbitMQ.Options where
 
-import Nagios.Check.RabbitMQ.Types
+import           Nagios.Check.RabbitMQ.Types
 
-import Options.Applicative
+import           Options.Applicative
 
 
 parseOptions :: IO CheckOptions

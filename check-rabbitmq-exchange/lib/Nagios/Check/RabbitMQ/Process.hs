@@ -1,5 +1,5 @@
-{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Nagios.Check.RabbitMQ.Process where
 
@@ -8,7 +8,7 @@ import           Data.Aeson
 import           Data.ByteString.Lazy.Char8  (ByteString)
 import qualified Data.ByteString.Lazy.Char8  as BSL
 import           Data.Maybe
-import qualified Data.Text as T
+import qualified Data.Text                   as T
 import           Nagios.Check.RabbitMQ.Types
 import           System.Nagios.Plugin
 
