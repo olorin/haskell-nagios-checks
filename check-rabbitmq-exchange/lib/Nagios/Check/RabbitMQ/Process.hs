@@ -14,7 +14,7 @@ import           System.Nagios.Plugin
 
 checkRawExchange :: ByteString -> CheckOptions -> IO ()
 checkRawExchange bs opts = case eitherDecode bs of
-    Left  e -> runNagiosPlugin $ addResult Warning $ T.pack ( "Decode failed with: " ++ e )
+    Left  e -> runNagiosPlugin $ addResult Unknown $ T.pack ( "Decode failed with: " ++ e )
     Right x -> checkExchange x opts
 
 checkExchange :: MessageDetail -> CheckOptions -> IO ()
