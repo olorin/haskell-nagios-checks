@@ -19,14 +19,12 @@ library
   exposed-modules:   Nagios.Check.RabbitMQ
   other-modules:     Nagios.Check.RabbitMQ.Options
                      Nagios.Check.RabbitMQ.Types
-                     Nagios.Check.RabbitMQ.Process
 
   build-depends:     base >=4.7 && <4.8,
                      aeson,
                      optparse-applicative,
                      bytestring,
                      text,
-                     vector,
                      nagios-check
 
 
@@ -41,6 +39,7 @@ executable check-rabbitmq-exchange
                        check-rabbitmq-exchange,
                        nagios-perfdata,
                        aeson,
+                       vector,
                        nagios-check,
                        text,
                        http-client,
