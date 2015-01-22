@@ -29,8 +29,8 @@ main = do
 
     let baseUrl = concat [ "http://", hostname opts, "/api" ]
 
-
-    -- Connection count
+    -- Get the length of the response at /api/connections
+    -- Perfdata only
     let connUrl = concat [ baseUrl, "/connections" ]
     connRequest <- applyBasicAuth username password <$> parseUrl connUrl
 
@@ -39,18 +39,11 @@ main = do
                   runNagiosPlugin $ addResult Unknown $ T.pack err
                   exitWith (ExitFailure 3)
         )
---    print $ length $ parseJSON . resp'
-
---    let connCount = checkConnectionCount (responseBody resp')
---    let connCount = length . decode (responseBody resp')
-    checkConnCount (responseBody resp')
-
---    addPerfDatum "connectionCount" (RealValue connCount) NullUnit Nothing Nothing Nothing Nothing
---    checkConnLength (responseBody resp) opts
+    let connCount = checkConnCount (responseBody resp')
 
     -- Full Exchange rates check
     let rateUrl = concat [ baseUrl, "/exchanges/%2F/", exchange opts ]
-    authedRequest <- applyBasicAuth username password <$> parseUrl baseUrl
+    authedRequest <- applyBasicAuth username password <$> parseUrl rateUrl
 
     let q_params = [ ("lengths_age",    Just "60")
                    , ("msg_rates_age",  Just "60")
@@ -65,5 +58,7 @@ main = do
 		  exitWith (ExitFailure 3)
         )
 
-    checkRawExchange (responseBody resp) opts
+    -- Smash together to return all perf data
+
+    checkRawExchange (responseBody resp) opts connCount
 

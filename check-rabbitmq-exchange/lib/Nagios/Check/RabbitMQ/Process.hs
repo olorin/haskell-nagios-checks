@@ -14,26 +14,23 @@ import           System.Nagios.Plugin
 import           Data.Int
 import qualified Data.Vector as V
 
-checkRawExchange :: ByteString -> CheckOptions -> IO ()
-checkRawExchange bs opts = case eitherDecode bs of
-    Left  e -> runNagiosPlugin $ addResult Unknown $ T.pack ( "Decode failed with: " ++ e )
-    Right x -> checkExchange x opts
+checkRawExchange :: ByteString -> CheckOptions -> Int64 -> IO ()
+checkRawExchange bs opts connCount = case eitherDecode bs of
+    Left  e -> runNagiosPlugin $ addResult Unknown $ T.pack ( "Exchange decode failed with: " ++ e )
+    Right x -> checkExchange x opts connCount
 
-checkConnCount :: ByteString -> IO ()
+checkConnCount :: ByteString -> Int64
 checkConnCount resp = case eitherDecode resp of
-        Right (Array x) -> runNagiosPlugin $ addPerfDatum "connectionCount" (IntegralValue (fromIntegral (V.length x))) NullUnit Nothing Nothing Nothing Nothing
-	--perfConnCount x
-        Left e -> runNagiosPlugin $ addResult Unknown $ T.pack ( "Decode fialed with: " ++ e )
+        Left e          -> fromIntegral 0 
+        Right (Array x) -> (fromIntegral (V.length x))
 
---perfConnCount :: ConnectionCount -> IO()
---perfConnCount ConnectionCount{..} = runNagiosPlugin $ addPerfDatum "connectionCount" (IntegralValue (fromIntegral (length x))) NullUnit Nothing Nothing Nothing Nothing
-
-checkExchange :: MessageDetail -> CheckOptions -> IO ()
-checkExchange MessageDetail{..} CheckOptions{..} = runNagiosPlugin $ do
+checkExchange :: MessageDetail -> CheckOptions -> Int64 -> IO ()
+checkExchange MessageDetail{..} CheckOptions{..} connCount = runNagiosPlugin $ do
     addResult OK "Exchange rate within bounds"
-    addPerfDatum "rateConfirms"   (RealValue rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "ratePublishIn"  (RealValue ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
-    addPerfDatum "ratePublishOut" (RealValue ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "rateConfirms"    (RealValue     rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "ratePublishIn"   (RealValue     ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "ratePublishOut"  (RealValue     ratePublishOut) NullUnit Nothing Nothing Nothing Nothing
+    addPerfDatum "connectionCount" (IntegralValue connCount) NullUnit Nothing Nothing Nothing Nothing
 
     --- Check options, if available
     unless (rateConfirms `inBoundsOf` minWarning &&
@@ -43,4 +40,3 @@ checkExchange MessageDetail{..} CheckOptions{..} = runNagiosPlugin $ do
     unless (rateConfirms `inBoundsOf` minCritical &&
             rateConfirms `inBoundsOf` maxCritical)
            (addResult Critical "Confirm Rate out of bounds")
-
