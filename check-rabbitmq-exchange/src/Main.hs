@@ -6,10 +6,10 @@ import           Control.Applicative
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Trans
+import           Data.Aeson
 import qualified Data.ByteString.Char8 as BSC
 import           Data.Maybe
 import           Data.Monoid
-import           Data.Aeson
 import qualified Data.Text             as T
 import           Nagios.Check.RabbitMQ
 import           Network.HTTP.Client
@@ -29,8 +29,8 @@ main = do
 
     let baseUrl = concat [ "http://", hostname opts, "/api" ]
 
-    -- Get the length of the response at /api/connections
-    -- Perfdata only
+
+    -- Get the length of the response at /api/connections (perfdata only)
     let connUrl = concat [ baseUrl, "/connections" ]
     connRequest <- applyBasicAuth username password <$> parseUrl connUrl
 
@@ -40,6 +40,7 @@ main = do
                   exitWith (ExitFailure 3)
         )
     let connCount = checkConnCount (responseBody resp')
+
 
     -- Full Exchange rates check
     let rateUrl = concat [ baseUrl, "/exchanges/%2F/", exchange opts ]
@@ -51,14 +52,13 @@ main = do
                    ]
     let q_authedRequest = setQueryString q_params authedRequest
 
-
     resp <- catch (httpLbs q_authedRequest manager)
     	(\e -> do let err = show (e :: HttpException)
 		  runNagiosPlugin $ addResult Unknown $ T.pack err
 		  exitWith (ExitFailure 3)
         )
 
-    -- Smash together to return all perf data
 
+    -- Smash together to return all perf data
     checkRawExchange (responseBody resp) opts connCount
 

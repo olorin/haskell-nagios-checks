@@ -7,12 +7,12 @@ import           Control.Monad
 import           Data.Aeson
 import           Data.ByteString.Lazy.Char8  (ByteString)
 import qualified Data.ByteString.Lazy.Char8  as BSL
+import           Data.Int
 import           Data.Maybe
 import qualified Data.Text                   as T
+import qualified Data.Vector                 as V
 import           Nagios.Check.RabbitMQ.Types
 import           System.Nagios.Plugin
-import           Data.Int
-import qualified Data.Vector as V
 
 checkRawExchange :: ByteString -> CheckOptions -> Int64 -> IO ()
 checkRawExchange bs opts connCount = case eitherDecode bs of
@@ -21,7 +21,7 @@ checkRawExchange bs opts connCount = case eitherDecode bs of
 
 checkConnCount :: ByteString -> Int64
 checkConnCount resp = case eitherDecode resp of
-        Left e          -> fromIntegral 0 
+        Left e          -> fromIntegral 0
         Right (Array x) -> (fromIntegral (V.length x))
 
 checkExchange :: MessageDetail -> CheckOptions -> Int64 -> IO ()
