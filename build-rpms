@@ -18,6 +18,8 @@ cabal update
 
 mkdir artefacts
 
+git submodule update --init --recursive
+
 for f in check-*; do
     if [[ -d "$f" ]]; then
         pushd "$f"
