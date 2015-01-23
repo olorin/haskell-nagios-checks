@@ -11,14 +11,14 @@
 
 module Main where
 
-import Check
-import Control.Lens
-import Control.Monad
-import Control.Monad.Except
-import Data.Text.Lazy (Text)
-import Formatting
-import Options.Applicative
-import System.Nagios.Plugin
+import           Check
+import           Control.Lens
+import           Control.Monad
+import           Control.Monad.Except
+import           Data.Text.Lazy       (Text)
+import           Formatting
+import           Options.Applicative
+import           System.Nagios.Plugin
 
 parsePluginOpts :: Parser PluginOpts
 parsePluginOpts =

@@ -32,17 +32,17 @@ module Check
     plugin
 ) where
 
-import Control.Applicative
-import Control.Lens hiding (coerce)
-import Control.Monad
-import Control.Monad.IO.Class
-import qualified Data.ByteString.Lazy as L
-import Data.Monoid
-import Data.String
-import Data.Text (Text)
-import Formatting (prec, sformat, shown, stext, (%))
-import System.Nagios.Plugin
-import Text.Trifecta
+import           Control.Applicative
+import           Control.Lens           hiding (coerce)
+import           Control.Monad
+import           Control.Monad.IO.Class
+import qualified Data.ByteString.Lazy   as L
+import           Data.Monoid
+import           Data.String
+import           Data.Text              (Text)
+import           Formatting             (prec, sformat, shown, stext, (%))
+import           System.Nagios.Plugin
+import           Text.Trifecta
 
 data Unusable
 data Extfrag
