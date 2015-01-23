@@ -53,8 +53,8 @@ main = runNagiosPlugin $ do
     resp <- liftIO $ httpLbs q_authedRequest manager
 
     case eitherDecode (responseBody resp) of
-        Left e                  -> addResult Unknown $ T.pack ( "Exchange decode failed with: " ++ e )
-	Right MessageDetail{..} -> do
+        Left e -> addResult Unknown $ T.pack ( "Exchange decode failed with: " ++ e )
+        Right MessageDetail{..} -> do
 	    addResult OK "Exchange rate within bounds"
 	    addPerfDatum "rateConfirms"    (RealValue     rateConfirms)   NullUnit Nothing Nothing Nothing Nothing
 	    addPerfDatum "ratePublishIn"   (RealValue     ratePublishIn)  NullUnit Nothing Nothing Nothing Nothing
