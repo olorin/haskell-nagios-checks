@@ -1,5 +1,5 @@
 name:                check-rabbitmq-exchange
-version:             0.0.1
+version:             0.1.0
 synopsis:            Simple NRPE-based Nagios check for the length of a RabbitMQ queue
 description:         Simple NRPE-based Nagios check for the length of a RabbitMQ queue
 homepage:            https://github.com/anchor/haskell-nagios-checks
@@ -19,7 +19,6 @@ library
   exposed-modules:   Nagios.Check.RabbitMQ
   other-modules:     Nagios.Check.RabbitMQ.Options
                      Nagios.Check.RabbitMQ.Types
-                     Nagios.Check.RabbitMQ.Process
 
   build-depends:     base >=4.7 && <4.8,
                      aeson,
@@ -39,6 +38,8 @@ executable check-rabbitmq-exchange
                        mtl,
                        check-rabbitmq-exchange,
                        nagios-perfdata,
+                       aeson,
+                       vector,
                        nagios-check,
                        text,
                        http-client,

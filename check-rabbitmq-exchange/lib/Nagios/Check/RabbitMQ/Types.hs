@@ -49,4 +49,3 @@ instance FromJSON MessageDetail where
                         <$> ((o .: "message_stats") >>= (.: "confirm_details") >>= (.: "avg_rate"))
                         <*> ((o .: "message_stats") >>= (.: "publish_in_details") >>= (.: "avg_rate"))
                         <*> ((o .: "message_stats") >>= (.: "publish_out_details") >>= (.: "avg_rate"))
-
