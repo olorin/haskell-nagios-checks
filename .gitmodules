@@ -1,0 +1,3 @@
+[submodule "check-rabbitmq-exchange"]
+	path = check-rabbitmq-exchange
+	url = https://github.com/anchor/nagios-plugin-rabbitmq-exchange
