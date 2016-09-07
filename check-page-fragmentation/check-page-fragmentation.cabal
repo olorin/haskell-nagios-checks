@@ -4,8 +4,8 @@ version:             2.0.3
 synopsis:            Check page fragmentation and emit perfdata
 license:             BSD3
 author:              Anchor Engineering <engineering@anchor.com.au>
-maintainer:          Anchor Engineering <engineering@anchor.com.au>
-copyright:           © 2013-2014 Anchor Systems, Pty Ltd and Others
+maintainer:          sio@tesser.org
+copyright:           Copyright 2013-2014 Anchor Systems Pty Ltd, and Others
 category:            Other
 tested-with:         GHC == 7.8
 stability:           experimental
