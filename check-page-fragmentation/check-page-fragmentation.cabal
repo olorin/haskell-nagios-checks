@@ -14,7 +14,7 @@ build-type:          Simple
 
 source-repository    head
   type:              git
-  location:          git@github.com:anchor/nagios-checks.git
+  location:          git@github.com:olorin/haskell-nagios-checks.git
 
 executable check-page-fragmentation
   main-is:           Main.hs
